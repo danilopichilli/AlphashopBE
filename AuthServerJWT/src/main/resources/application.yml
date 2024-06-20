@@ -7,7 +7,7 @@ spring:
         name: AUTH-SERVICE
 
 server:
-    port: 9100
+    port: 9101
 
 # ==============================================================
 # = Parametri Servizio gestUser

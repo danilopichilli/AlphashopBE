@@ -25,23 +25,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter 
 {
 
-	@Autowired
 	@Qualifier("customUserDetailsService")
-	private UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
+
+	private final PasswordEncoderConfig passwordEncoderConfig;
 	
 	@Value("${sicurezza.uri}")
 	private String authenticationPath;
 
-	@Autowired
+    public JWTWebSecurityConfig(UserDetailsService userDetailsService, PasswordEncoderConfig passwordEncoderConfig) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoderConfig = passwordEncoderConfig;
+    }
+
+    @Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception 
 	{
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoderBean());
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoderBean() 
-	{
-		return new BCryptPasswordEncoder();
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoderConfig.passwordEncoder());
 	}
 
 	@Bean

@@ -38,7 +38,7 @@ public class SelectArtTest {
 
 	private MockMvc mockMvc;
 
-	private String authServerUrl = "http://localhost:9100/auth";
+	private String authServerUrl = "http://localhost:9101/auth";
 	private String tokenJWT = "";
 	private String username = "danilo";
 	private String password = "testpassword";
