@@ -14,7 +14,7 @@ import java.util.List;
 * */
 public interface ArticoliRepository extends PagingAndSortingRepository<Articoli, String> {
 
-    @Query(value = "SELECT * FROM Articoli WHERE DESCRIZIONE LIKE :desArt", nativeQuery = true)
+    @Query("SELECT a FROM Articoli a WHERE a.descrizione LIKE %:desArt%")
     List<Articoli> SelByDescrizioneLike(@Param("desArt") String descrizione);
 
     List<Articoli> findByDescrizioneLike(String descrizione, Pageable pageable);

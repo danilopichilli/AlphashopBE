@@ -1,5 +1,7 @@
 package com.xantrix.webapp.model.document;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -20,12 +22,27 @@ public class Utenti
 	@Id
 	private String id;
 
+	@Size(min = 1, message = "{Size.Utenti.nome.Validation}")
+	@NotNull(message = "{NotNull.Utenti.nome.Validation}")
+	private String nome;
+
+	@Size(min = 1, message = "{Size.Utenti.cognome.Validation}")
+	@NotNull(message = "{NotNull.Utenti.cognome.Validation}")
+	private String cognome;
+
+	@NotNull(message = "{NotNull.Utenti.email.Validation}")
+	private String email;
+
 	@Indexed(unique = true)
-	@Size(min = 5, max = 80, message = "{Size.Utenti.userId.Validation}")
+	@Size(min = 5, max = 80, message = "{Size.Utenti.username.Validation}")
 	@NotNull(message = "{NotNull.Articoli.userId.Validation}")
 	private String username;
+
+	@NotNull(message = "{NotNull.Utenti.dob.Validation}")
+	private LocalDate dob;
 	
 	@Size(min = 8, max = 80, message = "{Size.Utenti.password.Validation}")
+	@NotNull(message = "{NotNull.Utenti.password.Validation}")
 	private String password;
 	
 	private String attivo;

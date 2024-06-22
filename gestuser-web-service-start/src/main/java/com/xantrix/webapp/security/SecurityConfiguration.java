@@ -48,6 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return manager;
     }
 
+    private static final String[] AUTH_WHITELIST = {"/api/utenti/registrazione"};
     private static final String[] USER_MATCHER = {"/api/utenti/cerca/**"};
     private static final String[] ADMIN_MATCHER = {
             "/api/utenti/inserisci/**",
@@ -58,6 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(USER_MATCHER).hasAnyRole("USER")
                 .antMatchers(ADMIN_MATCHER).hasAnyRole("ADMIN")
                 .anyRequest().authenticated()

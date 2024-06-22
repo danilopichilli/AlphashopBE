@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface UtenteService {
 
+    void createSimpleUser(UtentiDTO dto);
+
     void createUser(UtentiDTO dto);
 
     Utenti findById(String id);
