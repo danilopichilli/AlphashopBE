@@ -1,6 +1,6 @@
 package com.xantrix.webapp.security;
 
-import com.xantrix.webapp.entity.model.Utenti;
+import com.xantrix.webapp.model.Utenti;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;

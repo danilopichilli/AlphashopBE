@@ -94,7 +94,7 @@ public class UtenteController {
     }
 
     @GetMapping("/cerca/username/{username}")
-    public ResponseEntity<Utenti> findUserByUserId(@PathVariable String username) throws NotFoundException {
+    public ResponseEntity<Utenti> findUserByUsername(@PathVariable String username) throws NotFoundException {
         logger.info("******* Ricerchiamo utente con username {} *******", username);
 
         Utenti utente = utenteService.findByUsername(username);

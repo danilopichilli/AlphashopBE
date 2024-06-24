@@ -4,11 +4,11 @@ import com.xantrix.webapp.mapper.UtentiMapper;
 import com.xantrix.webapp.model.dto.UtentiDTO;
 import com.xantrix.webapp.model.document.Utenti;
 import com.xantrix.webapp.repository.UtentiRepository;
+import com.xantrix.webapp.security.PasswordEncoderConfig;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +19,13 @@ public class UtenteServiceImpl implements UtenteService {
 
     private final UtentiRepository utentiRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoderConfig passwordEncoderConfig;
 
     private final UtentiMapper utentiMapper;
 
-    public UtenteServiceImpl(UtentiRepository utentiRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UtentiMapper utentiMapper) {
+    public UtenteServiceImpl(UtentiRepository utentiRepository, PasswordEncoderConfig passwordEncoderConfig, UtentiMapper utentiMapper) {
         this.utentiRepository = utentiRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoderConfig = passwordEncoderConfig;
         this.utentiMapper = utentiMapper;
     }
 
@@ -33,7 +33,7 @@ public class UtenteServiceImpl implements UtenteService {
     @Transactional
     public void createSimpleUser(UtentiDTO dto) {
         List<String> userRoles = Collections.singletonList("USER");
-        String password = bCryptPasswordEncoder.encode(dto.getPassword());
+        String password = passwordEncoderConfig.passwordEncoder().encode(dto.getPassword());
         dto.setPassword(password);
         dto.setRuoli(userRoles);
         dto.setAttivo("Si");
@@ -44,7 +44,7 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     @Transactional
     public void createUser(UtentiDTO dto) {
-       String password = bCryptPasswordEncoder.encode(dto.getPassword());
+       String password = passwordEncoderConfig.passwordEncoder().encode(dto.getPassword());
         dto.setPassword(password);
         Utenti utente = utentiMapper.toEntity(dto);
         utentiRepository.save(utente);
