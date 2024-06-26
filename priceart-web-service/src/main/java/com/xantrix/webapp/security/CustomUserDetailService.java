@@ -1,29 +1,24 @@
 package com.xantrix.webapp.security;
 
-import com.xantrix.webapp.model.Utenti;
+import com.xantrix.webapp.controller.UtenteClient;
+import com.xantrix.webapp.entity.model.Utente;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
 
 @Service("customUserDetailService")
 public class CustomUserDetailService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailService.class);
 
-    private final UserConfig userConfig;
+    private final UtenteClient utenteClient;
 
-    private BearerTokenInterceptor bearerTokenInterceptor;
-
-    public CustomUserDetailService(UserConfig userConfig) {
-        this.userConfig = userConfig;
+    public CustomUserDetailService(UtenteClient utenteClient) {
+        this.utenteClient = utenteClient;
     }
 
     @Override
@@ -37,7 +32,7 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException(errMsg);
         }
 
-        Utenti utente = this.getHttpValue(username);
+        Utente utente = utenteClient.getUtente(username);
         if (utente == null) {
             errMsg = String.format("Utente %s non trovato!!", username);
             logger.warn(errMsg);
@@ -52,29 +47,5 @@ public class CustomUserDetailService implements UserDetailsService {
         builder.authorities(profili);
 
         return builder.build();
-    }
-
-    private Utenti getHttpValue(String username) {
-        URI url = null;
-
-        try {
-            String srvUrl = userConfig.getSrvUrl();
-            url = new URI(srvUrl + username);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        RestTemplate restTemplate = new RestTemplate();
-        //restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userConfig.getUsername(), userConfig.getPassword()));
-        restTemplate.getInterceptors().add(bearerTokenInterceptor);
-        Utenti utente = null;
-        try {
-            utente = restTemplate.getForObject(url, Utenti.class);
-        } catch (Exception e) {
-            String errMsg = String.format("Connessione al servizio di autenticazione non riuscita!!");
-            logger.warn(errMsg);
-        }
-
-        return utente;
     }
 }

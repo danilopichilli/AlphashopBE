@@ -1,16 +1,16 @@
 package com.xantrix.webapp.repository;
 
+import com.xantrix.webapp.model.document.Utente;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.xantrix.webapp.model.document.Utenti;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UtentiRepository extends MongoRepository<Utenti, String>
+public interface UtentiRepository extends MongoRepository<Utente, String>
 {
-	Optional<Utenti> findById(String id);
+	Optional<Utente> findById(String id);
 
-	Utenti findByUsername(String username);
+	Utente findByUsername(String username);
 }

@@ -1,13 +1,20 @@
 package com.xantrix.webapp.mapper;
 
-import com.xantrix.webapp.model.dto.UtentiDTO;
-import com.xantrix.webapp.model.document.Utenti;
+import com.xantrix.webapp.model.dto.UtenteDTO;
+import com.xantrix.webapp.model.document.Utente;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.factory.Mappers;
+
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface UtentiMapper {
 
-    Utenti toEntity(UtentiDTO utentiDTO);
+    UtentiMapper INSTANCE = Mappers.getMapper(UtentiMapper.class);
 
-    UtentiDTO toDto(Utenti utenti);
+    Utente toEntity(UtenteDTO utenteDTO);
+
+    UtenteDTO toDto(Utente utente);
 }

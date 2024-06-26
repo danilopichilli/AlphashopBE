@@ -1,21 +1,22 @@
 package com.xantrix.webapp.service;
 
-import com.xantrix.webapp.model.dto.UtentiDTO;
-import com.xantrix.webapp.model.document.Utenti;
+import com.xantrix.webapp.model.dto.UtenteDTO;
+import com.xantrix.webapp.model.document.Utente;
 
 import java.util.List;
 
 public interface UtenteService {
 
-    void createSimpleUser(UtentiDTO dto);
+    void createSimpleUser(UtenteDTO dto);
 
-    void createUser(UtentiDTO dto);
+    void createUser(UtenteDTO dto);
 
-    Utenti findById(String id);
+    UtenteDTO findById(String id);
 
-    Utenti findByUsername(String nome);
+    UtenteDTO findByUsername(String nome);
 
-    List<Utenti> findAll();
+    List<Utente> findAll();
 
-    void deleteUserById(Utenti utente);
+    void deleteUserById(String id);
+
 }

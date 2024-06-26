@@ -49,6 +49,8 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+    private static final String[] AUTH_WHITELIST = {"/api/utenti/registrazione"};
     private static final String[] USER_MATCHER = { "/api/utenti/cerca/username/**"};
     private static final String[] ADMIN_MATCHER = { "/api/utenti/inserisci/**", "/api/utenti/elimina/**", "/api/utenti/cerca/tutti" };
 
@@ -61,6 +63,7 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(USER_MATCHER).hasRole("USER")
                 .antMatchers(ADMIN_MATCHER).hasRole("ADMIN")
                 .anyRequest().authenticated();

@@ -1,6 +1,7 @@
 package com.xantrix.webapp.security;
 
-import com.xantrix.webapp.model.document.Utenti;
+import com.xantrix.webapp.model.document.Utente;
+import com.xantrix.webapp.model.dto.UtenteDTO;
 import com.xantrix.webapp.service.UtenteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +24,11 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Utenti utente = utenteService.findByUsername(username);
+        UtenteDTO dto = utenteService.findByUsername(username);
         User.UserBuilder builder = User.withUsername(username);
-        builder.disabled((!utente.getAttivo().equals("Si")));
-        builder.password(utente.getPassword());
-        String[] profili = utente.getRuoli().stream().map(a -> "ROLE_" + a).toArray(String[]::new);
+        builder.disabled((!dto.getAttivo().equals("Si")));
+        builder.password(dto.getPassword());
+        String[] profili = dto.getRuoli().stream().map(a -> "ROLE_" + a).toArray(String[]::new);
         builder.authorities(profili);
         return builder.build();
 

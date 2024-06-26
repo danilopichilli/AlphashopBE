@@ -1,11 +1,10 @@
 package com.xantrix.webapp.service;
 
 import com.xantrix.webapp.mapper.UtentiMapper;
-import com.xantrix.webapp.model.dto.UtentiDTO;
-import com.xantrix.webapp.model.document.Utenti;
+import com.xantrix.webapp.model.document.Utente;
+import com.xantrix.webapp.model.dto.UtenteDTO;
 import com.xantrix.webapp.repository.UtentiRepository;
 import com.xantrix.webapp.security.PasswordEncoderConfig;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,49 +30,54 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     @Transactional
-    public void createSimpleUser(UtentiDTO dto) {
+    public void createSimpleUser(UtenteDTO dto) {
         List<String> userRoles = Collections.singletonList("USER");
         String password = bCrypt.passwordEncoder().encode(dto.getPassword());
         dto.setPassword(password);
         dto.setRuoli(userRoles);
         dto.setAttivo("Si");
-        Utenti utente = utentiMapper.toEntity(dto);
+        Utente utente = utentiMapper.toEntity(dto);
         utentiRepository.save(utente);
     }
 
     @Override
     @Transactional
-    public void createUser(UtentiDTO dto) {
-       String password = bCrypt.passwordEncoder().encode(dto.getPassword());
+    public void createUser(UtenteDTO dto) {
+        String password = bCrypt.passwordEncoder().encode(dto.getPassword());
         dto.setPassword(password);
-        Utenti utente = utentiMapper.toEntity(dto);
+        Utente utente = utentiMapper.toEntity(dto);
         utentiRepository.save(utente);
     }
 
     @Override
-    public Utenti findById(String id) {
+    public UtenteDTO findById(String id) {
         if(id != null) {
-            Optional<Utenti> utente = utentiRepository.findById(id);
+            Optional<Utente> utente = utentiRepository.findById(id);
             if (utente.isPresent()) {
-                return utente.get();
+                UtenteDTO dto = utentiMapper.toDto(utente.get());
+                return dto;
             }
         }
         return null;
     }
 
     @Override
-    public Utenti findByUsername(String username) {
-        return utentiRepository.findByUsername(username);
+    public UtenteDTO findByUsername(String username) {
+        Utente entity = utentiRepository.findByUsername(username);
+        if (entity != null) {
+            return utentiMapper.toDto(entity);
+        }
+        return null;
     }
 
     @Override
-    public List<Utenti> findAll() {
+    public List<Utente> findAll() {
         return utentiRepository.findAll();
     }
 
     @Override
-    public void deleteUserById(Utenti utente) {
-        utentiRepository.delete(utente);
+    public void deleteUserById(String id) {
+        utentiRepository.deleteById(id);
     }
 
 }

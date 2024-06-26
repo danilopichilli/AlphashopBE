@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: GestUser
+    name: GestUserWebService
   data:
     mongodb:
       uri: mongodb://localhost:27018/ms-users

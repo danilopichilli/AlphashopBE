@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.xantrix.webapp.exception.BindingException;
 import com.xantrix.webapp.exception.DuplicateException;
 import com.xantrix.webapp.exception.NotFoundException;
-import com.xantrix.webapp.model.dto.UtentiDTO;
-import com.xantrix.webapp.model.document.Utenti;
+import com.xantrix.webapp.model.document.Utente;
+import com.xantrix.webapp.model.dto.UtenteDTO;
 import com.xantrix.webapp.service.UtenteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class UtenteController {
     }
 
     @PostMapping(value = "/registrazione", produces = "application/json")
-    public ResponseEntity<?> registerSimpleUser(@Validated @RequestBody UtentiDTO dto, BindingResult bindingResult) throws BindingException, DuplicateException {
+    public ResponseEntity<?> registerSimpleUser(@Validated @RequestBody UtenteDTO dto, BindingResult bindingResult) throws BindingException, DuplicateException {
 
         if (bindingResult.hasErrors()) {
             String errMsg = errMessage.getMessage(Objects.requireNonNull(bindingResult.getFieldError()), LocaleContextHolder.getLocale());
@@ -47,7 +47,7 @@ public class UtenteController {
             throw new BindingException(errMsg);
         }
 
-        Utenti checkUtente = utenteService.findByUsername(dto.getUsername());
+        UtenteDTO checkUtente = utenteService.findByUsername(dto.getUsername());
         if (checkUtente != null) {
             String errMsg = String.format("Utente con username %s già presente in anagrafica", dto.getUsername());
             logger.warn(errMsg);
@@ -66,7 +66,7 @@ public class UtenteController {
     }
 
     @PostMapping(value = "/inserisci", produces = "application/json")
-    public ResponseEntity<?> createUser(@Validated @RequestBody UtentiDTO dto, BindingResult bindingResult)
+    public ResponseEntity<?> createUser(@Validated @RequestBody UtenteDTO dto, BindingResult bindingResult)
             throws BindingException, DuplicateException {
         if(bindingResult.hasErrors()) {
             String errMsg = errMessage.getMessage(Objects.requireNonNull(bindingResult.getFieldError()), LocaleContextHolder.getLocale());
@@ -75,7 +75,7 @@ public class UtenteController {
             throw new BindingException(errMsg);
         }
 
-        Utenti checkUtente = utenteService.findByUsername(dto.getUsername());
+        UtenteDTO checkUtente = utenteService.findByUsername(dto.getUsername());
         if (checkUtente != null) {
             String errMsg = String.format("Utente con username %s già presente in anagrafica", dto.getUsername());
             logger.warn(errMsg);
@@ -94,56 +94,55 @@ public class UtenteController {
     }
 
     @GetMapping("/cerca/username/{username}")
-    public ResponseEntity<Utenti> findUserByUsername(@PathVariable String username) throws NotFoundException {
+    public ResponseEntity<UtenteDTO> findUserByUsername(@PathVariable String username) throws NotFoundException {
         logger.info("******* Ricerchiamo utente con username {} *******", username);
 
-        Utenti utente = utenteService.findByUsername(username);
-        if(utente == null){
+        UtenteDTO dto = utenteService.findByUsername(username);
+        if(dto == null){
             String errMsg = String.format("L'utente con username %s non è stato trovato!", username);
             logger.warn(errMsg);
 
             throw new NotFoundException(errMsg);
         }
 
-        return new ResponseEntity<>(utente, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping("/cerca/tutti")
-    public ResponseEntity<List<Utenti>> findAllUsers() throws NotFoundException {
+    public ResponseEntity<List<Utente>> findAllUsers() throws NotFoundException {
         logger.info("******* Lista utenti *******");
 
-        List<Utenti> listaUtenti = utenteService.findAll();
-        if(listaUtenti.isEmpty()) {
+        List<Utente> listaUtente = utenteService.findAll();
+        if(listaUtente.isEmpty()) {
             String errMsg = "La lista utenti è vuota";
             logger.warn(errMsg);
 
             throw new NotFoundException(errMsg);
         }
 
-        return new ResponseEntity<>(listaUtenti, HttpStatus.OK);
+        return new ResponseEntity<>(listaUtente, HttpStatus.OK);
     }
 
-    @DeleteMapping("/elimina/{username}")
-    public ResponseEntity<?> deleteUser(@PathVariable String username) throws NotFoundException {
-        logger.info("******* Eliminiamo l'utente con username {}", username);
+    @DeleteMapping("/elimina/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable String id) throws NotFoundException {
+        logger.info("******* Eliminiamo l'utente con username {}", id);
 
-        Utenti utente = utenteService.findByUsername(username);
-        if(utente == null){
-            String errMsg = String.format("L'utente con username %s non è stato trovato!", username);
+        UtenteDTO dto = utenteService.findById(id);
+        if(dto == null){
+            String errMsg = String.format("L'utente con username %s non è stato trovato!", id);
             logger.warn(errMsg);
 
             throw new NotFoundException(errMsg);
         }
 
-        utenteService.deleteUserById(utente);
+        utenteService.deleteUserById(dto.getId());
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode responseNode = mapper.createObjectNode();
 
         responseNode.put("code", HttpStatus.OK.toString());
-        responseNode.put("message", "Eliminazione Utente " + utente.getUsername() + " Eseguita Con Successo");
+        responseNode.put("message", "Eliminazione Utente " + dto.getUsername() + " Eseguita Con Successo");
 
         return new ResponseEntity<>(responseNode, HttpStatus.OK);
     }
-
 
 }
