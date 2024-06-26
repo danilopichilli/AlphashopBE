@@ -10,18 +10,10 @@ spring:
   messages:
     basename: messages_it, messages_us
 
-# ==============================================================
-# = Parametri Sicurezza JWT
-# ==============================================================
-sicurezza:
+jwt:
   uri: /auth
   refresh: /refresh
-  header: Authorization
+  tokenHeader: Authorization
   prefix: Bearer
   expiration: 86400
   secret: mySecretKey
-
-gestuser:
-  srvUrl: http://localhost:8019/api/utenti/cerca/username/
-  username: Admin
-  password: VerySecretPwd

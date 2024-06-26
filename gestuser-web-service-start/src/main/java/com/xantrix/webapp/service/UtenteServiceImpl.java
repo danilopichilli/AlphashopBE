@@ -19,13 +19,13 @@ public class UtenteServiceImpl implements UtenteService {
 
     private final UtentiRepository utentiRepository;
 
-    private final PasswordEncoderConfig passwordEncoderConfig;
+    private final PasswordEncoderConfig bCrypt;
 
     private final UtentiMapper utentiMapper;
 
-    public UtenteServiceImpl(UtentiRepository utentiRepository, PasswordEncoderConfig passwordEncoderConfig, UtentiMapper utentiMapper) {
+    public UtenteServiceImpl(UtentiRepository utentiRepository, PasswordEncoderConfig bCrypt, UtentiMapper utentiMapper) {
         this.utentiRepository = utentiRepository;
-        this.passwordEncoderConfig = passwordEncoderConfig;
+        this.bCrypt = bCrypt;
         this.utentiMapper = utentiMapper;
     }
 
@@ -33,7 +33,7 @@ public class UtenteServiceImpl implements UtenteService {
     @Transactional
     public void createSimpleUser(UtentiDTO dto) {
         List<String> userRoles = Collections.singletonList("USER");
-        String password = passwordEncoderConfig.passwordEncoder().encode(dto.getPassword());
+        String password = bCrypt.passwordEncoder().encode(dto.getPassword());
         dto.setPassword(password);
         dto.setRuoli(userRoles);
         dto.setAttivo("Si");
@@ -44,7 +44,7 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     @Transactional
     public void createUser(UtentiDTO dto) {
-       String password = passwordEncoderConfig.passwordEncoder().encode(dto.getPassword());
+       String password = bCrypt.passwordEncoder().encode(dto.getPassword());
         dto.setPassword(password);
         Utenti utente = utentiMapper.toEntity(dto);
         utentiRepository.save(utente);

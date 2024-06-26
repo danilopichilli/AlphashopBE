@@ -29,7 +29,7 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoderConfig passwordEncoderConfig;
 
-    @Value("${sicurezza.uri}")
+    @Value("${jwt.uri}")
     private String authenticationPath;
 
     public JWTWebSecurityConfig(JwtTokenAuthorizationOncePerRequestFilter jwtTokenAuthorizationOncePerRequestFilter, UserDetailsService userDetailsService, JwtUnAuthorizedResponeAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint, PasswordEncoderConfig passwordEncoderConfig) {
@@ -49,11 +49,8 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    private static final String[] NOAUTH_MATCHER = {"/api/utenti/registrazione/**"};
-    private static final String[] USER_MATCHER = {"/api/utenti/cerca/**"};
-    private static final String[] ADMIN_MATCHER = {
-            "/api/utenti/inserisci/**",
-            "/api/utenti/elimina/**",};
+    private static final String[] USER_MATCHER = { "/api/utenti/cerca/username/**"};
+    private static final String[] ADMIN_MATCHER = { "/api/utenti/inserisci/**", "/api/utenti/elimina/**", "/api/utenti/cerca/tutti" };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -64,7 +61,6 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(NOAUTH_MATCHER).permitAll()
                 .antMatchers(USER_MATCHER).hasRole("USER")
                 .antMatchers(ADMIN_MATCHER).hasRole("ADMIN")
                 .anyRequest().authenticated();

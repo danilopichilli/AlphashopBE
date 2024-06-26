@@ -1,8 +1,8 @@
-package com.xantrix.webapp.controller;
-
-import java.io.Serializable;
+package com.xantrix.webapp.model;
 
 import lombok.Data;
+
+import java.io.Serializable;
 
 @Data
 public class JwtTokenResponse implements Serializable 

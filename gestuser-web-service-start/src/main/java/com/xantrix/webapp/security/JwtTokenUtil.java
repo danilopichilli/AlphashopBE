@@ -26,8 +26,11 @@ public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -3301605591108950415L;
     private Clock clock = DefaultClock.INSTANCE;
 
-    @Autowired
-    private JwtConfig jwtConfig;
+    private final JwtConfig jwtConfig;
+
+    public JwtTokenUtil(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
 
 
     public String getUsernameFromToken(String token)

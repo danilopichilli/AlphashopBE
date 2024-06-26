@@ -3,6 +3,7 @@ package com.xantrix.webapp.security;
 import com.xantrix.webapp.model.Utenti;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 
@@ -43,7 +45,7 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException(errMsg);
         }
 
-        User.UserBuilder builder = null;
+        User.UserBuilder builder;
         builder = org.springframework.security.core.userdetails.User.withUsername(utente.getUsername());
         builder.disabled((utente.getAttivo().equals("Si") ? false : true));
         builder.password(utente.getPassword());
@@ -64,13 +66,14 @@ public class CustomUserDetailService implements UserDetailsService {
         }
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userConfig.getUsername(), userConfig.getPassword()));
+        //restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userConfig.getUsername(), userConfig.getPassword()));
+        restTemplate.getInterceptors().add(new BearerTokenInterceptor(token));
 
         Utenti utente = null;
         try {
             utente = restTemplate.getForObject(url, Utenti.class);
         } catch (Exception e) {
-            String errMsg = String.format("Connessione al servizio di autenticazione non riuscita!!");
+            String errMsg = "Connessione al servizio di autenticazione non riuscita!!";
             logger.warn(errMsg);
         }
 

@@ -7,6 +7,7 @@ import com.xantrix.webapp.entity.Barcode;
 import com.xantrix.webapp.exception.BindingException;
 import com.xantrix.webapp.exception.DuplicateException;
 import com.xantrix.webapp.exception.NotFoundException;
+import com.xantrix.webapp.security.BearerTokenInterceptor;
 import com.xantrix.webapp.service.ArticoliService;
 import com.xantrix.webapp.service.BarcodeService;
 import org.slf4j.Logger;

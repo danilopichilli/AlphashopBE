@@ -122,4 +122,5 @@ public class JwtTokenUtil implements Serializable {
     {
         return new Date(createdDate.getTime() + jwtConfig.getExpiration() * 1000);
     }
+
 }

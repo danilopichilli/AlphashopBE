@@ -29,7 +29,7 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    @Value("${sicurezza.header}")
+    @Value("${jwt.tokenHeader}")
     private String tokenHeader;
 
     public JwtTokenAuthorizationOncePerRequestFilter(UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {

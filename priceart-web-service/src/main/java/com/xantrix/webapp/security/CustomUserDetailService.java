@@ -20,6 +20,8 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private final UserConfig userConfig;
 
+    private BearerTokenInterceptor bearerTokenInterceptor;
+
     public CustomUserDetailService(UserConfig userConfig) {
         this.userConfig = userConfig;
     }
@@ -63,8 +65,8 @@ public class CustomUserDetailService implements UserDetailsService {
         }
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userConfig.getUsername(), userConfig.getPassword()));
-
+        //restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(userConfig.getUsername(), userConfig.getPassword()));
+        restTemplate.getInterceptors().add(bearerTokenInterceptor);
         Utenti utente = null;
         try {
             utente = restTemplate.getForObject(url, Utenti.class);
